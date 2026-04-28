@@ -2,7 +2,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import express from 'express'
-import sequelize from './config/db.js'
+import sequelize from './config/postgres.js'
+import connectMongo from './config/mongo.js'
 
 import routes from './routes/index.js'
 import authRoutes from './routes/authRoutes.js'
@@ -14,6 +15,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import adminRoutes from './routes/adminRoutes.js'
+
+
 
 // 1. CREAR APP PRIMERO
 const app = express()
@@ -62,14 +65,18 @@ app.use((err, req, res, next) => {
   })
 })
 
-// START SERVER
+// START SERVER Y CONEXIÓN A postgreSQL y MongoDB
 const startServer = async () => {
   try {
+    // PostgreSQL
     await sequelize.authenticate()
-    console.log('✅ Base de datos conectada en puerto 5440')
+    console.log('✅ PostgreSQL conectado')
 
     await sequelize.sync({ force: false })
     console.log('✅ Modelos sincronizados')
+
+    // MongoDB
+    await connectMongo()
 
     const PORT = process.env.PORT || 3000
     app.listen(PORT, () => {

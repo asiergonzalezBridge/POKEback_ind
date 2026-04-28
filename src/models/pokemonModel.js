@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import sequelize from '../config/db.js'
+import sequelize from '../config/postgres.js'
 
 const Pokemon = sequelize.define('Pokemon', {
   id_pokemon: {

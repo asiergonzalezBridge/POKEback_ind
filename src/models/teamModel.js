@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
+import sequelize from "../config/postgres.js";
 
 const Team = sequelize.define("Team", {
   id_team: {
