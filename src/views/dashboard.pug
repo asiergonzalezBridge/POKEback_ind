@@ -1,0 +1,21 @@
+extends layout
+
+block variables
+  - var pageClass = 'dashboard-page'
+
+block title
+  title Dashboard - PokéBack
+
+block content
+  h1 Bienvenido, #{user.username}
+  div
+    section
+      h2 Tu perfil
+      p Email: #{user.email}
+      p Rol: #{user.rol}
+
+    section
+      h2 ¿Qué quieres hacer?
+      a(href="/pokemon") Ver mis Pokémon
+      a(href="/teams") Ver mis equipos
+      a(href="/store") Ir a la tienda

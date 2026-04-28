@@ -1,0 +1,146 @@
+.login-page .navbar ul li.nav-user a,
+.register-page .navbar ul li.nav-user a {
+    background: var(--poke-yellow);
+    border: 0.2rem solid var(--poke-shadow);
+    color: var(--poke-shadow);
+    font-weight: 700;
+    box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+}
+
+.login-page,
+.register-page {
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h1+p {
+            padding: 0.4rem 1.2rem;
+            border: 0.2rem solid var(--red);
+            border-radius: 3rem;
+            font-weight: 700;
+            color: var(--red) !important;
+            text-transform: uppercase;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 30rem;
+            padding: 1rem 1.5rem 2rem 1.5rem;
+            border: 0.3rem solid var(--poke-blue);
+            border-radius: 2rem;
+            background: var(--white);
+
+            label,
+            input,
+            button,
+            select {
+                border-radius: 3rem;
+                text-align: center;
+            }
+
+            input,
+            select,
+            button {
+                padding: 0.6rem;
+                font-size: 1.2rem;
+                font-family: "Nunito", sans-serif;
+                border: 0.15rem solid var(--poke-blue);
+                outline: none;
+                cursor: pointer;
+                transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            }
+
+            input,
+            select {
+                margin-bottom: 0.3rem;
+            }
+
+            label,
+            button {
+                text-transform: uppercase;
+                font-weight: 900;
+                color: var(--poke-shadow);
+            }
+
+            input {
+                color: var(--grey);
+
+                &::placeholder {
+                    color: var(--grey);
+                    font-size: 1.2rem;
+                }
+
+                &:focus {
+                    color: var(--poke-blue);
+                    border-color: var(--poke-blue);
+                }
+
+                &:hover {
+                    border-color: var(--poke-blue);
+                    box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+                }
+            }
+
+            select {
+                color: var(--grey);
+
+                &:focus {
+                    color: var(--poke-blue);
+                    border-color: var(--poke-blue);
+                }
+
+                &:hover {
+                    border-color: var(--poke-blue);
+                    box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+                }
+
+                option {
+                    color: var(--poke-shadow);
+                }
+            }
+
+            button {
+                margin-top: 1rem;
+                background: var(--poke-yellow);
+                border: 0.15rem solid var(--poke-blue);
+                cursor: pointer;
+
+                &:hover {
+                    border-color: var(--poke-blue);
+                    box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+                }
+            }
+
+            #poketype {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                color: var(--poke-blue);
+                padding-right: 2rem;
+                background-image: url("img/arrow-icon.png");
+                background-repeat: no-repeat;
+                background-position: right 1rem center;
+            }
+
+            .form-link {
+                margin-top: 0.5rem;
+                text-align: center;
+                font-size: 0.9rem;
+
+                a {
+                    color: var(--poke-blue);
+                    font-weight: 700;
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+}

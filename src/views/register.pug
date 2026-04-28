@@ -1,0 +1,41 @@
+extends layout
+
+block variables
+    - var pageClass = 'register-page'
+
+block title
+    title Registro - PokéBack
+
+block content
+    h1 Crear cuenta
+
+    if error
+        p(style="color:red") #{error}
+
+    form(action="/register" method="POST")
+        label(for="username") Nombre de usuario
+        input(type="text" id="username" name="username" placeholder="Ash Ketchum" required)
+
+        label(for="email") Email
+        input(type="email" id="email" name="email" placeholder="explorador@mail.com" required)
+
+        label(for="password") Contraseña
+        input(type="password" id="password" name="password" placeholder="••••••••" required)
+
+        label(for="confirm_password") Confirmar contraseña
+        input(type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required)
+
+        label(for="poketype") Tipo Pokémon favorito
+        select(id="poketype" name="poketype" required)
+            option(value="" disabled selected) Elige tu tipo...
+            option(value="fire") Fuego
+            option(value="water") Agua
+            option(value="grass") Planta
+            option(value="electric") Eléctrico
+            option(value="psychic") Psíquico
+
+        button(type="submit") Registrarse
+
+        span.form-link
+            | ¿Ya tienes cuenta? 
+            a(href="/login") Inicia sesión

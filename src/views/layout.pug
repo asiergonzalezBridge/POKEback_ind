@@ -1,0 +1,61 @@
+doctype html
+html(lang="es")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(rel="icon" type="image/x-icon" href="/favicon.ico")
+        link(rel="stylesheet" href="/styles.css")
+        link(rel="stylesheet" href="/admin.css")
+        link(rel="stylesheet" href="/dashboard.css")
+        link(rel="stylesheet" href="/login-register.css")
+        link(rel="stylesheet" href="/pokemon.css")
+        link(rel="stylesheet" href="/store.css")
+        link(rel="stylesheet" href="/teams.css")
+        block links
+        block title
+            title PokéBack 
+    // Se insertan variables a través de pageClass (en
+    // este caso al body para parsonalizar cada página)       
+    block variables
+    body(class=pageClass) 
+        header
+            block header
+            div.header-logo
+                a(href="/" rel="noopener noreferrer")
+                    p.logo PoK
+                        span é
+                        span B
+                        span ack
+            button.hamburger(aria-label="Menú" onclick="toggleMenu()")
+                span
+                span
+                span
+            nav.navbar
+                ul
+                    if user && user.rol === 'admin'
+                        li.nav-admin
+                            a(href="/admin") Admin
+                    li.nav-store
+                        a(href="/store") Tienda
+                    li.nav-pokemon
+                        a(href="/pokemon") Mis Pokémon
+                    li.nav-teams
+                        a(href="/teams") Mis Equipos
+                    li.nav-user.hello-user
+                        if user && user.username
+                            a(href="/dashboard") Hola, #{user.username}
+                            a(href="/logout") Cerrar sesión
+                        else
+                            a(href="/login") Login
+
+        main
+            block content
+                h1 ¡PokéBack Forever!
+        footer
+            p PokéBack © 2026
+    block scripts
+        script.
+            function toggleMenu() {
+                document.querySelector('.navbar').classList.toggle('navbar--open')
+                document.querySelector('.hamburger').classList.toggle('hamburger--open')
+            }

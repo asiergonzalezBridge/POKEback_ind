@@ -1,0 +1,236 @@
+.admin-page {
+    .navbar ul li.nav-admin a {
+        background: var(--poke-yellow);
+        box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+    }
+
+    .admin-section {
+        width: 100%;
+        margin: 0 auto 3rem;
+
+        h2,
+        h3 {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .table-wrapper {
+    
+        overflow-x: auto;
+        border-radius: 1.5rem;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--white);
+        border-radius: 1.5rem;
+        overflow: hidden;
+        border: 0.2rem solid var(--poke-blue);
+
+        th,
+        td {
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-size: 0.9rem;
+            border-bottom: 0.1rem solid #e0e0e0;
+        }
+
+        th {
+            background: var(--poke-blue);
+            color: var(--white);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        tbody tr:not(.edit-row):nth-child(odd) td {
+            background: var(--white);
+        }
+
+        tbody tr:not(.edit-row):nth-child(even) td {
+            background: #eeeeee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:not(.edit-row):hover td {
+            background: #dce6ff;
+        }
+    }
+
+    .badge {
+        padding: 0.2rem 0.8rem;
+        border-radius: 3rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+
+        &--admin {
+            background: var(--poke-yellow);
+            color: var(--poke-shadow);
+        }
+
+        &--user {
+            background: #e0e0e0;
+            color: var(--poke-shadow);
+        }
+    }
+
+    .btn-edit,
+    .btn-delete {
+        border-radius: 3rem;
+        font-size: 0.8rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        background: var(--white);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        padding: 0.3rem 1.2rem;
+        margin-bottom: 0.4rem;
+        border: 0.15rem solid var(--poke-blue);
+        color: var(--poke-blue);
+
+        &:hover {
+            background: var(--poke-blue);
+            color: var(--white);
+        }
+    }
+
+    .btn-delete {
+        padding: 0.3rem 0.8rem;
+        border: 0.15rem solid var(--red);
+        color: var(--red);
+
+        &:hover {
+            background: var(--red);
+            color: var(--white);
+        }
+    }
+
+    .admin-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 1rem;
+        background: var(--white);
+        border: 0.2rem solid var(--poke-blue);
+        border-radius: 1.5rem;
+
+        input,
+        select {
+            padding: 0.5rem 0.8rem;
+            border: 0.15rem solid var(--poke-blue);
+            border-radius: 3rem;
+            font-family: "Nunito", sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+
+            &:focus {
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+            }
+        }
+
+        button {
+            padding: 0.5rem 1.2rem;
+            border: 0.15rem solid var(--poke-shadow);
+            border-radius: 3rem;
+            background: var(--poke-yellow);
+            font-family: "Nunito", sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+            }
+        }
+    }
+
+    .inline-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+
+        input,
+        select {
+            padding: 0.4rem 0.8rem;
+            border: 0.15rem solid var(--poke-blue);
+            border-radius: 3rem;
+            font-family: "Nunito", sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+
+            &:focus {
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+            }
+        }
+
+        button[type="submit"] {
+            padding: 0.4rem 1rem;
+            border: 0.15rem solid var(--poke-shadow);
+            border-radius: 3rem;
+            background: var(--poke-yellow);
+            font-family: "Nunito", sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+            }
+        }
+
+        .btn-cancel {
+            padding: 0.4rem 1rem;
+            border: 0.15rem solid var(--poke-shadow);
+            border-radius: 3rem;
+            background: var(--white);
+            font-family: "Nunito", sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+            }
+        }
+    }
+}
+
+/* ===== Filas de edición inline ===== */
+.edit-row {
+    display: none;
+}
+
+.edit-row.edit-row--visible {
+    display: table-row;
+}
+
+.edit-row td {
+    background: #f0f4ff;
+    padding: 0.8rem 1rem;
+}
+
+@media (max-width: 968px) {
+    .table-wrapper {
+        border: 0.2rem solid var(--poke-blue);
+        -webkit-overflow-scrolling: touch;
+
+        table {
+            border: 0.2rem solid transparent!important;
+        }
+
+    }
+}

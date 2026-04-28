@@ -1,0 +1,26 @@
+extends layout
+
+block variables
+    - var pageClass = 'login-page'
+
+block title
+    title Login - PokéBack
+
+block content
+    h1 Iniciar sesión
+
+    if error
+        p(style="color:red") #{error}
+
+    form(action="/login" method="POST")
+        label(for="email") Email
+        input(type="email" id="email" name="email" placeholder="explorador@mail.com" autocomplete="off" required)
+
+        label(for="password") Contraseña
+        input(type="password" id="password" name="password" placeholder="••••••••" autocomplete="off" required)
+
+        button(type="submit") Entrar
+
+        span.form-link
+            | ¿No tienes cuenta? 
+            a(href="/register") Regístrate

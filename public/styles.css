@@ -1,0 +1,308 @@
+/* ========== IMPORTED FONTS ========= */
+
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+@font-face {
+    font-family: 'PokemonFont';
+    src: url('/fonts/pokemon-solid.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ========== VARIABLES ========== */
+:root {
+    --pokemon: 'PokemonFont', sans-serif;
+    --poke-yellow: #FFCB03;
+    --poke-blue: #3C5AAC;
+    --poke-shadow: #1B407E;
+    --white: #fdfdfd;
+    --grey: #cccccc;
+    --red: #971010;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: "Nunito", sans-serif;
+    color: var(--poke-shadow);
+
+    &::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/img/background-pokeback.webp');
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+    }
+}
+
+main {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Exo 2", sans-serif;
+    text-align: center;
+}
+
+h1 {
+    text-transform: uppercase;
+}
+
+footer {
+    margin: auto 0 0 0;
+    text-align: center;
+
+    p {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* ========== HEADER ========== */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    height: clamp(4.5rem, 3.857rem + 2.857vw, 6rem);
+}
+
+.header-logo {
+    a {
+        text-decoration: none;
+    }
+
+    .logo {
+        margin: 0;
+        padding: 0;
+        font-family: var(--pokemon);
+        text-transform: initial;
+        font-weight: 400;
+        font-size: clamp(2rem, 1.571rem + 1.905vw, 3rem);
+        letter-spacing: 0.1rem;
+        color: var(--poke-yellow);
+        -webkit-text-stroke: clamp(0.12rem, 0.086rem + 0.152vw, 0.2rem) var(--poke-blue);
+        text-shadow: 0.4rem 0.4rem 0 var(--poke-shadow);
+
+        span {
+            &:nth-of-type(1) {
+                position: relative;
+                top: -1rem;
+                left: -0.35rem;
+            }
+
+            &:nth-of-type(3) {
+                position: relative;
+                left: 0.3rem;
+            }
+        }
+    }
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+    ul {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        font-size: 0.85rem;
+
+        li {
+            height: auto;
+            margin-right: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        a {
+            padding: 0.4rem 0.8rem;
+            border: 0.2rem solid var(--poke-shadow);
+            border-radius: 3rem;
+            box-shadow: 0rem 0rem 0rem var(--poke-shadow);
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--poke-shadow);
+            background: linear-gradient(45deg, var(--poke-yellow) 50%, transparent 50%);
+            background-position: 100%;
+            background-size: 400%;
+            transition: all 0.5s ease;
+
+            &:hover {
+                border: 0.2rem solid var(--poke-blue);
+                box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+                color: var(--poke-blue);
+                background-position: 0%;
+            }
+        }
+
+        .hello-user {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+
+            a:first-child {
+                margin-right: 0.2rem;
+                padding: 0.4rem 0.8rem;
+                border: 0.1rem solid var(--poke-yellow);
+                border-radius: 3rem;
+                font-weight: 500;
+                color: var(--poke-yellow);
+                background: var(--poke-blue);
+
+                &:hover {
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}
+
+/* ========== HAMBURGER ========== */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.4rem;
+    background: var(--white);
+    border: 0.2rem solid var(--poke-shadow);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    span {
+        display: block;
+        width: 100%;
+        height: 0.2rem;
+        background: var(--poke-shadow);
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    &:hover {
+        background: var(--poke-yellow);
+        box-shadow: 0.2rem 0.3rem 0rem var(--poke-shadow);
+    }
+
+    &--open span:nth-child(1) {
+        transform: translateY(0.55rem) rotate(45deg);
+    }
+
+    &--open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    &--open span:nth-child(3) {
+        transform: translateY(-0.55rem) rotate(-45deg);
+    }
+}
+
+/* ========== OVERLAY FONDO ========== */
+.admin-page,
+.dashboard-page,
+.pokemon-page,
+.store-page,
+.teams-page,
+.login-page,
+.register-page {
+    &::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffffa4;
+        z-index: -1;
+    }
+}
+
+.index-page {
+    p {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+}
+
+/* ========== RESPONSIVE GLOBAL ========== */
+@media (max-width: 968px) {
+    header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 0.8rem 1rem;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .navbar {
+        width: 100%;
+
+        ul {
+            flex-direction: column;
+            align-items: stretch;
+            max-height: 0;
+            overflow: hidden;
+            gap: 0.5rem;
+            padding: 0 1rem;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+
+            li {
+                width: 100%;
+                margin-right: 0;
+
+                a {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+
+            .hello-user {
+                flex-direction: column;
+                width: 100%;
+
+                a:first-child,
+                a:last-child {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+
+        &.navbar--open ul {
+            max-height: 30rem;
+            padding: 0.5rem 1rem 1rem;
+        }
+    }
+}

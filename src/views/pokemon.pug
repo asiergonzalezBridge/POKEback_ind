@@ -1,0 +1,27 @@
+extends layout
+
+block variables
+    - var pageClass = 'pokemon-page'
+
+block title
+    title Mis Pokémon - PokéBack
+
+block content
+    h1 Mis Pokémon
+
+    .filter-sort
+        a(href="/pokemon?sort=ASC" class=(currentSort === 'ASC' ? 'active' : '')) A → Z
+        a(href="/pokemon?sort=DESC" class=(currentSort === 'DESC' ? 'active' : '')) Z → A
+        if currentSort
+            a.reset-price(href="/pokemon") ✕
+
+    if pokemons.length === 0
+        p No tienes ningún Pokémon todavía
+
+    each pokemon in pokemons
+        article
+            h2 #{pokemon.Pokemon.name}
+            p Tipo: #{pokemon.Pokemon.type}
+            p HP: #{pokemon.current_hp}
+            p Ataque: #{pokemon.current_attack}
+            p Velocidad: #{pokemon.current_speed}

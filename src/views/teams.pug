@@ -1,0 +1,23 @@
+extends layout
+
+block variables
+    - var pageClass = 'teams-page'
+
+block title
+    title Mis Equipos - PokéBack
+
+block content
+    h1 Mis Equipos
+
+    if teams.length === 0
+        p No tienes ningún equipo todavía
+
+    each team in teams
+        article
+            h2 #{team.name}
+            ul
+                each slot in team.TeamPokemons
+                    li
+                        span Slot #{slot.slot}:
+                        span  #{slot.UserPokemon.Pokemon.name}
+                        span  (HP: #{slot.UserPokemon.current_hp} | ATK: #{slot.UserPokemon.current_attack} | SPD: #{slot.UserPokemon.current_speed})

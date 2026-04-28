@@ -1,0 +1,65 @@
+extends layout
+
+block variables
+    - var pageClass = 'store-page'
+
+block title
+    title Tienda - PokéBack
+
+block content
+    h1 Tienda
+    p Tus monedas: #{user.coins}
+
+    .store-filters
+        .filter-types
+            - var extraParams = (minPrice ? 'minPrice=' + minPrice : '') + (maxPrice ? (minPrice ? '&' : '') + 'maxPrice=' + maxPrice : '') + (currentSort ? ((minPrice || maxPrice) ? '&' : '') + 'sort=' + currentSort : '')
+            a(href=`/store${extraParams ? '?' + extraParams : ''}` class=(!currentType ? 'active' : '')) Todos
+            a(href=`/store?type=pokemon${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}` class=(currentType === 'pokemon' ? 'active' : '')) Pokémon
+            a(href=`/store?type=cosmetic${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}` class=(currentType === 'cosmetic' ? 'active' : '')) Cosméticos
+            a(href=`/store?type=upgrade${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}` class=(currentType === 'upgrade' ? 'active' : '')) Mejoras
+
+        form.filter-price(action="/store" method="GET")
+            if currentType
+                input(type="hidden" name="type" value=currentType)
+            if currentSort
+                input(type="hidden" name="sort" value=currentSort)
+            input(type="number" name="minPrice" placeholder="Precio mín." value=minPrice min="0")
+            input(type="number" name="maxPrice" placeholder="Precio máx." value=maxPrice min="0")
+            button(type="submit") Filtrar
+            if minPrice || maxPrice
+                a.reset-price(href=`/store${currentType ? '?type=' + currentType : ''}${currentSort ? (currentType ? '&' : '?') + 'sort=' + currentSort : ''}`) ✕
+
+        .filter-sort
+            - var sortParams = (currentType ? '&type=' + currentType : '') + (minPrice ? '&minPrice=' + minPrice : '') + (maxPrice ? '&maxPrice=' + maxPrice : '')
+            a(href=`/store?sort=ASC${sortParams}` class=(currentSort === 'ASC' ? 'active' : '')) A → Z
+            a(href=`/store?sort=DESC${sortParams}` class=(currentSort === 'DESC' ? 'active' : '')) Z → A
+            if currentSort
+                a.reset-price(href=`/store${currentType ? '?type=' + currentType : ''}${minPrice ? (currentType ? '&' : '?') + 'minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) ✕
+
+    .products-grid
+        each product in products
+            article
+                h2 #{product.name}
+                if product.image
+                    img(src=`/img/${product.image}` alt=product.name)
+                p Tipo: #{product.type}
+                p #{product.description}
+                p Precio: #{product.price} monedas
+                p Stock: #{product.stock}
+                if product.expire_time
+                    p Oferta hasta: #{product.expire_time}
+                form(action="/store/buy" method="POST")
+                    input(type="hidden" name="product_id" value=product.id_product)
+                    button(type="submit") Comprar
+
+    nav.pagination
+        if currentPage > 1
+            a(href=`/store?page=${currentPage - 1}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) ← Anterior
+        each val, index in Array(totalPages).fill(0)
+            - var p = index + 1
+            if p === currentPage
+                span.active #{p}
+            else
+                a(href=`/store?page=${p}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) #{p}
+        if currentPage < totalPages
+            a(href=`/store?page=${currentPage + 1}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) Siguiente →
