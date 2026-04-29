@@ -46,4 +46,9 @@ OrderItem.belongsTo(Order, { foreignKey: 'order_id' })
 OrderItem.belongsTo(Product, { foreignKey: 'product_id' })
 Product.hasMany(OrderItem, { foreignKey: 'product_id' })
 
+// ORDER → USER
+Order.belongsTo(User, { foreignKey: 'user_id' })
+User.hasMany(Order, { foreignKey: 'user_id' })  
+
 export { User, UserPokemon, Team, TeamPokemon, Pokemon, Product, UserStore, Order, OrderItem }
+

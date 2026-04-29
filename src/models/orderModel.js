@@ -8,7 +8,10 @@ export const Order = sequelize.define('Order', {
     autoIncrement: true
   },
   user_id: DataTypes.INTEGER,
-  total: DataTypes.FLOAT
+  total: DataTypes.FLOAT,
+  created_at: {
+    type: DataTypes.DATE
+  }
 }, {
   tableName: 'orders',
   timestamps: false

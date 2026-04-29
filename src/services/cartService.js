@@ -1,9 +1,10 @@
 import Cart from '../models/cartModel.js'
-import { Product } from '../models/index.js'
+import { Product, Order, OrderItem, User, UserStore } from '../models/index.js'
 import { Op } from 'sequelize'
-import { Order, OrderItem } from '../models/index.js'
 
-// Obtener o crear carrito
+// =======================
+// OBTENER O CREAR CARRITO
+// =======================
 export const getOrCreateCart = async (userId) => {
   let cart = await Cart.findOne({ userId })
 
@@ -14,7 +15,9 @@ export const getOrCreateCart = async (userId) => {
   return cart
 }
 
-// Añadir producto con validación stock
+// =======================
+// AÑADIR AL CARRITO
+// =======================
 export const addToCart = async (userId, productId, quantity = 1) => {
 
   const cart = await getOrCreateCart(userId)
@@ -47,7 +50,9 @@ export const addToCart = async (userId, productId, quantity = 1) => {
   return cart
 }
 
-// Eliminar producto
+// =======================
+// ELIMINAR DEL CARRITO
+// =======================
 export const removeFromCart = async (userId, productId) => {
   const cart = await getOrCreateCart(userId)
 
@@ -59,7 +64,9 @@ export const removeFromCart = async (userId, productId) => {
   return cart
 }
 
-// Actualizar cantidad
+// =======================
+// ACTUALIZAR CANTIDAD
+// =======================
 export const updateQuantity = async (userId, productId, quantity) => {
 
   const cart = await getOrCreateCart(userId)
@@ -92,8 +99,23 @@ export const updateQuantity = async (userId, productId, quantity) => {
 
   return cart
 }
+// =======================
+// OBTENER CANTIDAD TOTAL DE PRODUCTOS EN EL CARRITO
+// =======================
+export const getCartCount = async (userId) => {
+  const cart = await getOrCreateCart(userId)
 
-// Vaciar carrito
+  const count = cart.items.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  )
+
+  return count
+}
+
+// =======================
+// VACIAR CARRITO
+// =======================
 export const clearCart = async (userId) => {
   const cart = await getOrCreateCart(userId)
 
@@ -103,15 +125,26 @@ export const clearCart = async (userId) => {
   return cart
 }
 
-// Obtener carrito
+// =======================
+// OBTENER CARRITO
+// =======================
 export const getCart = async (userId) => {
   return await getOrCreateCart(userId)
 }
 
-//compra total del carrito
+// =======================
+// CARRITO CON TOTAL
+// =======================
+export const getCartWithTotal = async (userId) => {
+  const cart = await getOrCreateCart(userId) // 👈 ESTO YA CREA SI NO EXISTE
 
-  export const getCartWithTotal = async (userId) => {
-  const cart = await getOrCreateCart(userId)
+  if (!cart || !cart.items) {
+    return {
+      userId,
+      items: [],
+      total: 0
+    }
+  }
 
   const productIds = cart.items.map(item => item.productId)
 
@@ -122,22 +155,27 @@ export const getCart = async (userId) => {
   })
 
   const itemsWithDetails = cart.items.map(item => {
-    const product = products.find(
-      p => p.id_product === item.productId
-    )
+  const product = products.find(
+    p => p.id_product === item.productId
+  )
 
-    if (!product) return null
+  if (!product) return null
 
-    const price = parseFloat(product.price)
-    const subtotal = price * item.quantity
+  const price = parseFloat(product.price)
+  const subtotal = price * item.quantity
 
-    return {
-      productId: item.productId,
-      quantity: item.quantity,
-      price,
-      subtotal
-    }
-  }).filter(item => item !== null)
+  return {
+  productId: item.productId,
+  quantity: item.quantity,
+  subtotal,
+  product: {
+    name: product.name,
+    description: product.description,
+    type: product.type,
+    price: price
+  }
+}
+}).filter(Boolean)
 
   const total = itemsWithDetails.reduce(
     (acc, item) => acc + item.subtotal,
@@ -149,11 +187,11 @@ export const getCart = async (userId) => {
     items: itemsWithDetails,
     total
   }
-  console.log('👉 getCartWithTotal ejecutándose')
-  console.log('👉 items:', cart.items)
-
 }
 
+// =======================
+// CHECKOUT (COMPRA)
+// =======================
 export const checkout = async (userId) => {
 
   const cart = await getOrCreateCart(userId)
@@ -192,9 +230,20 @@ export const checkout = async (userId) => {
     const product = products.find(
       p => p.id_product === item.productId
     )
-
     return acc + (parseFloat(product.price) * item.quantity)
   }, 0)
+
+  // OBTENER USUARIO
+  const user = await User.findByPk(userId)
+
+  // VALIDAR MONEDAS
+  if (user.coins < total) {
+    throw new Error('Monedas insuficientes')
+  }
+
+  // RESTAR MONEDAS
+  user.coins -= total
+  await user.save()
 
   // CREAR ORDER
   const order = await Order.create({
@@ -214,6 +263,27 @@ export const checkout = async (userId) => {
       quantity: item.quantity,
       price: product.price
     })
+  }
+
+  // ACTUALIZAR INVENTARIO (user_store)
+  for (const item of cart.items) {
+    const existing = await UserStore.findOne({
+      where: {
+        user_id_user: userId,
+        store_id_product: item.productId
+      }
+    })
+
+    if (existing) {
+      existing.quantity += item.quantity
+      await existing.save()
+    } else {
+      await UserStore.create({
+        user_id_user: userId,
+        store_id_product: item.productId,
+        quantity: item.quantity
+      })
+    }
   }
 
   // RESTAR STOCK

@@ -10,6 +10,10 @@ block content
     h1 Tienda
     p Tus monedas: #{user.coins}
 
+    a(href="/cart" class="cart-button")
+        | 🛒 Carrito 
+        span #{cartCount}
+
     .store-filters
         .filter-types
             - var extraParams = (minPrice ? 'minPrice=' + minPrice : '') + (maxPrice ? (minPrice ? '&' : '') + 'maxPrice=' + maxPrice : '') + (currentSort ? ((minPrice || maxPrice) ? '&' : '') + 'sort=' + currentSort : '')
@@ -40,26 +44,34 @@ block content
         each product in products
             article
                 h2 #{product.name}
+
                 if product.image
                     img(src=`/img/${product.image}` alt=product.name)
+
                 p Tipo: #{product.type}
                 p #{product.description}
                 p Precio: #{product.price} monedas
                 p Stock: #{product.stock}
+
                 if product.expire_time
                     p Oferta hasta: #{product.expire_time}
-                form(action="/store/buy" method="POST")
-                    input(type="hidden" name="product_id" value=product.id_product)
-                    button(type="submit") Comprar
+
+                div.cart-actions
+                 form(action="/cart/add" method="POST")
+                    input(type="hidden" name="productId" value=product.id_product)
+                    input(type="number" name="quantity" value="1" min="1" max=product.stock)
+                    button(type="submit" class="btn-cart") 🛒 Añadir    
 
     nav.pagination
         if currentPage > 1
             a(href=`/store?page=${currentPage - 1}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) ← Anterior
+
         each val, index in Array(totalPages).fill(0)
             - var p = index + 1
             if p === currentPage
                 span.active #{p}
             else
                 a(href=`/store?page=${p}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) #{p}
+
         if currentPage < totalPages
             a(href=`/store?page=${currentPage + 1}${currentType ? '&type=' + currentType : ''}${minPrice ? '&minPrice=' + minPrice : ''}${maxPrice ? '&maxPrice=' + maxPrice : ''}`) Siguiente →

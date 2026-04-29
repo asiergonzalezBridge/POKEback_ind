@@ -1,5 +1,6 @@
 import * as cartService from '../services/cartService.js'
 
+
 // GET /api/cart
 export const getCart = async (req, res, next) => {
   try {
@@ -8,6 +9,18 @@ export const getCart = async (req, res, next) => {
     const cart = await cartService.getCart(userId)
     res.json(cart)
 
+  } catch (error) {
+    next(error)
+  }
+}
+// GET /api/cart/count
+export const getCartCount = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+
+    const count = await cartService.getCartCount(userId)
+
+    res.json({ count })
   } catch (error) {
     next(error)
   }
@@ -92,3 +105,46 @@ export const checkout = async (req, res, next) => {
     next(error)
   }
 }
+// GET /cart (vista)
+export const getCartView = async (req, res) => {
+  const userId = req.session.user.id
+
+  const cartData = await cartService.getCartWithTotal(userId)
+
+  res.render('cart', {
+    cart: cartData,
+    total: cartData.total
+  })
+}
+
+// GET /cart/add (vista)
+export const addToCartView = async (req, res, next) => {
+  try {
+    const userId = req.session.user.id
+    const { productId, quantity } = req.body
+
+    await cartService.addToCart(userId, Number(productId), Number(quantity))
+
+    res.redirect('/store')
+  } catch (error) {
+    next(error)
+  }
+}
+
+// POST /cart/checkout (vista)
+export const checkoutView = async (req, res, next) => {
+  try {
+    const userId = req.session.user.id
+
+    await cartService.checkout(userId)
+
+    res.redirect('/cart') // o /store
+
+  } catch (error) {
+    res.render('cart', { error: error.message })
+  }
+}
+
+
+
+

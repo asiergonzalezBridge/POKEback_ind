@@ -1,0 +1,38 @@
+extends layout
+
+block variables
+    - var pageClass = 'store-page'
+
+block title
+    title Carrito - PokéBack
+
+block content
+    h1 TU CARRITO
+
+    if !cart || !cart.items || cart.items.length === 0
+        p.empty El carrito está vacío
+    else
+        .cart-container
+            each item in cart.items
+                .cart-item
+                    .cart-info
+                        h3 #{item.product.name}
+                        p.desc #{item.product.description}
+                        p Tipo: #{item.product.type}
+
+                    .cart-details
+                        span Precio: #{item.product.price} monedas
+                        span Cantidad: #{item.quantity}
+                        span Subtotal: #{item.product.price * item.quantity} monedas
+
+                    .cart-actions
+                        form(action=`/cart/remove/${item.productId}` method="POST")
+                            button(type="submit") 🗑
+
+        .cart-summary
+            h2 Total: #{total} monedas
+
+            form(action="/cart/checkout" method="POST")
+                button.btn-checkout(type="submit") Finalizar compra
+
+            a.btn-secondary(href="/store") Seguir comprando

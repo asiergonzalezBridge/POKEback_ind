@@ -106,25 +106,30 @@ block content
             button(type="submit") Añadir producto
 
     section.admin-section
-        h2 Compras de usuarios
+        section.admin-section
+    h2 Historial de compras
 
-        div.table-wrapper
-            table.admin-table
-                thead
-                    tr
-                        th Usuario
-                        th Producto
-                        th Tipo
-                        th Precio
-                        th Cantidad
-                tbody
-                    each purchase in purchases
+    if orders && orders.length
+        each order in orders
+            div.table-wrapper(style="margin-bottom: 20px;")
+               h3 Pedido ##{order.id_order} - Usuario: #{order.User.username} - #{order.total} monedas - #{new Date(order.created_at).toLocaleDateString()}
+
+                table.admin-table
+                    thead
                         tr
-                            td #{purchase.User.username}
-                            td #{purchase.product.name}
-                            td #{purchase.product.type}
-                            td #{purchase.product.price} monedas
-                            td #{purchase.quantity}
+                            th Producto
+                            th Tipo
+                            th Precio
+                            th Cantidad
+                    tbody
+                        each item in order.OrderItems
+                            tr
+                                td #{item.Product.name}
+                                td #{item.Product.type}
+                                td #{item.price} monedas
+                                td #{item.quantity}
+    else
+        p No hay compras registradas.
 
     script.
         function toggleEdit(id) {

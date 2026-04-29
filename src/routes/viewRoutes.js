@@ -7,6 +7,9 @@ import Pokemon from '../models/pokemonModel.js'
 import Team from '../models/teamModel.js'
 import TeamPokemon from '../models/teamPokemonModel.js'
 import Product from '../models/productsModel.js'
+import * as cartController from '../controllers/cartController.js'
+
+
 
 const router = Router()
 
@@ -167,5 +170,13 @@ router.get('/store', requireSession, async (req, res) => {
     res.status(500).send('Error al cargar la tienda')
   }
 })
+// ==========================================
+// CARRITO
+// ==========================================
+router.get('/cart', requireSession, cartController.getCartView)
+router.post('/cart/add', requireSession, cartController.addToCartView)
+router.post('/cart/checkout', requireSession, cartController.checkoutView)
+
+
 
 export default router

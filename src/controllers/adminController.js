@@ -5,7 +5,8 @@ export const getAdminPanel = async (req, res, next) => {
     const users = await adminService.getAllUsers()
     const products = await adminService.getAllProducts()
     const purchases = await adminService.getAllPurchases()
-    res.render('admin', { users, products, purchases, user: req.session.user })
+    const orders = await adminService.getAllOrders()
+    res.render('admin', { users, products, purchases, orders, user: req.session.user })
   } catch (error) {
     next(error)
   }

@@ -1,5 +1,5 @@
-import { User, UserStore } from '../models/index.js'
-import Product from '../models/productsModel.js'
+import { User, UserStore, Order, OrderItem, Product } from '../models/index.js'
+
 
 // Obtiene todos los usuarios excluyendo el campo password.
 export const getAllUsers = async () => {
@@ -95,5 +95,28 @@ export const getAllPurchases = async () => {
       { model: User, attributes: ['username'] }
     ],
     order: [['user_id_user', 'ASC']]
+  })
+}
+
+
+
+export const getAllOrders = async () => {
+  return await Order.findAll({
+    include: [
+      {
+        model: User,
+        attributes: ['username']
+      },
+      {
+        model: OrderItem,
+        include: [
+          {
+            model: Product,
+            attributes: ['name', 'type', 'price']
+          }
+        ]
+      }
+    ],
+    order: [['id_order', 'DESC']]
   })
 }
