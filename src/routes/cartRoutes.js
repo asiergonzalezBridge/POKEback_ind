@@ -9,6 +9,8 @@ router.post('/add', verifyToken, cartController.addToCart)
 router.delete('/remove/:productId', verifyToken, cartController.removeFromCart)
 router.put('/update', verifyToken, cartController.updateQuantity)
 router.delete('/clear', verifyToken, cartController.clearCart)
+router.get('/total', verifyToken, cartController.getCartTotal)
+router.post('/checkout', verifyToken, cartController.checkout)
 
 export default router
 

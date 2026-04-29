@@ -67,3 +67,28 @@ export const clearCart = async (req, res, next) => {
     next(error)
   }
 }
+// GET /api/cart/total
+export const getCartTotal = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+
+    const cart = await cartService.getCartWithTotal(userId)
+    res.json(cart)
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const checkout = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+
+    const result = await cartService.checkout(userId)
+
+    res.json(result)
+
+  } catch (error) {
+    next(error)
+  }
+}

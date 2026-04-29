@@ -71,6 +71,31 @@ CREATE TABLE IF NOT EXISTS public.team_pokemon
     PRIMARY KEY (team_id, slot)
     
 );
+CREATE TABLE IF NOT EXISTS  orders (
+    id_order SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    total NUMERIC(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(id_user)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE order_items (
+    id_order_item SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    price NUMERIC(10,2) NOT NULL,
+
+    FOREIGN KEY (order_id)
+    REFERENCES orders(id_order)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (product_id)
+    REFERENCES products(id_product)
+);
 
 ALTER TABLE IF EXISTS public.user_pokemon
     ADD FOREIGN KEY (user_id_user)
