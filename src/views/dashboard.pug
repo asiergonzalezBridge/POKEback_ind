@@ -19,3 +19,21 @@ block content
       a(href="/pokemon") Ver mis Pokémon
       a(href="/teams") Ver mis equipos
       a(href="/store") Ir a la tienda
+  
+  div.inventory
+    h2 Tu inventario
+
+    hr
+
+    .inventory-content
+      .inventory-column
+        h3 Pokémon
+        ul
+          each p in pokemons
+            li #{p.Pokemon.name} (HP: #{p.current_hp})
+
+      .inventory-column
+        h3 Objetos
+        ul
+          each item in items
+            li #{item.product.name} x#{item.quantity}

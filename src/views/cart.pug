@@ -27,7 +27,7 @@ block content
 
                     .cart-actions
                         form(action=`/cart/remove/${item.productId}` method="POST")
-                            button(type="submit") 🗑
+                            button(type="submit") ❌
 
         .cart-summary
             h2 Total: #{total} monedas
@@ -36,3 +36,4 @@ block content
                 button.btn-checkout(type="submit") Finalizar compra
 
             a.btn-secondary(href="/store") Seguir comprando
+            pre= JSON.stringify(item, null, 2)

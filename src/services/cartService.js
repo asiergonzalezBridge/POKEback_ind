@@ -53,11 +53,14 @@ export const addToCart = async (userId, productId, quantity = 1) => {
 // =======================
 // ELIMINAR DEL CARRITO
 // =======================
+
 export const removeFromCart = async (userId, productId) => {
   const cart = await getOrCreateCart(userId)
 
+  const id = Number(productId) 
+
   cart.items = cart.items.filter(
-    item => item.productId !== productId
+    item => item.productId !== id
   )
 
   await cart.save()

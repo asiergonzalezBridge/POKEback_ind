@@ -43,11 +43,11 @@ export const addToCart = async (req, res, next) => {
 // DELETE /api/cart/remove/:productId
 export const removeFromCart = async (req, res, next) => {
   try {
-    const userId = req.user.id
-    const { productId } = req.params
+    const userId = req.session.user.id
+    const productId = req.params.productId
 
     const cart = await cartService.removeFromCart(userId, Number(productId))
-    res.json(cart)
+    res.redirect('/cart')
 
   } catch (error) {
     next(error)

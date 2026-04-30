@@ -5,14 +5,16 @@ block variables
 
 block title
     title Tienda - PokéBack
+    
 
 block content
     h1 Tienda
     p Tus monedas: #{user.coins}
 
-    a(href="/cart" class="cart-button")
-        | 🛒 Carrito 
-        span #{cartCount}
+        a(href="/cart" class="cart-button")
+            | 🛒 carrito 
+            
+    
 
     .store-filters
         .filter-types

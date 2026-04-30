@@ -8,6 +8,8 @@ import Team from '../models/teamModel.js'
 import TeamPokemon from '../models/teamPokemonModel.js'
 import Product from '../models/productsModel.js'
 import * as cartController from '../controllers/cartController.js'
+import { getUserStore } from '../services/userStoreService.js'
+import { getUserPokemons } from '../services/userPokemonService.js'
 
 
 
@@ -53,8 +55,19 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.get('/dashboard', requireSession, (req, res) => {
-  res.render('dashboard', { user: req.session.user })
+router.get('/dashboard', requireSession, async (req, res) => {
+  const user = req.session.user
+
+  console.log(user) // 👈 comprueba esto
+
+  const pokemons = await getUserPokemons(user.id)
+  const items = await getUserStore(user.id)
+
+  res.render('dashboard', {
+    user,
+    pokemons,
+    items
+  })
 })
 
 router.get('/logout', (req, res) => {
@@ -176,6 +189,10 @@ router.get('/store', requireSession, async (req, res) => {
 router.get('/cart', requireSession, cartController.getCartView)
 router.post('/cart/add', requireSession, cartController.addToCartView)
 router.post('/cart/checkout', requireSession, cartController.checkoutView)
+router.post('/cart/remove/:productId', requireSession, cartController.removeFromCart)
+router.post('/cart/update', requireSession, cartController.updateQuantity)
+router.get('/cart/total', requireSession, cartController.getCartTotal)
+router.get('/cart/count', requireSession, cartController.getCartCount)
 
 
 
