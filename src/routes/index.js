@@ -9,6 +9,7 @@ import viewRoutes from './viewRoutes.js';
 import userStoreRoutes from './userStoreRoutes.js'
 import cartRoutes from './cartRoutes.js'
 import orderRoutes from './orderRoutes.js'
+import battleRoutes from './battleRoutes.js'
 
 const router = Router();
 
@@ -21,6 +22,7 @@ router.use('/userpokemon', userPokemonRoutes);
 router.use('/view', viewRoutes);
 router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
-router.use('/', userStoreRoutes);
+router.use('/battle', battleRoutes);  
+router.use('/', userStoreRoutes);     
 
 export default router;

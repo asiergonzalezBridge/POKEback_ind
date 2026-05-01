@@ -8,8 +8,12 @@ import Team from '../models/teamModel.js'
 import TeamPokemon from '../models/teamPokemonModel.js'
 import Product from '../models/productsModel.js'
 import * as cartController from '../controllers/cartController.js'
+import * as battleController from '../controllers/battleController.js'  
 import { getUserStore } from '../services/userStoreService.js'
 import { getUserPokemons } from '../services/userPokemonService.js'
+
+
+
 
 
 
@@ -193,7 +197,15 @@ router.post('/cart/remove/:productId', requireSession, cartController.removeFrom
 router.post('/cart/update', requireSession, cartController.updateQuantity)
 router.get('/cart/total', requireSession, cartController.getCartTotal)
 router.get('/cart/count', requireSession, cartController.getCartCount)
+// ==========================================
+// BATALLA
+// ==========================================
 
 
+router.get('/battle',        requireSession, battleController.getBattleSelect)
+router.post('/battle/start', requireSession, battleController.postBattleStart)
+router.get('/battle/fight',  requireSession, battleController.getBattleFight)
+router.post('/battle/turn',  requireSession, battleController.postBattleTurn)
+router.get('/battle/result', requireSession, battleController.getBattleResult)
 
 export default router

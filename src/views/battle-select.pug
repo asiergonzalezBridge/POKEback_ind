@@ -1,0 +1,30 @@
+extends layout
+
+block variables
+    - var pageClass = 'battle-page'
+
+block title
+    title Batalla - PokéBack
+
+block content
+    h1 ⚔️ ELEGIR POKÉMON
+
+    if pokemons.length === 0
+        p.empty No tienes Pokémon disponibles para batallar.
+        a(href="/store") Ir a la tienda
+    else
+        p Elige con quién entrar al combate. Si pierde, lo perderás para siempre.
+
+        form(action="/battle/start" method="POST")
+            .pokemon-select-grid
+                each p in pokemons
+                    label.pokemon-card
+                        input(type="radio" name="userPokemonId" value=p.id_user_pokemon required)
+                        .card-inner
+                            h3 #{p.Pokemon.name}
+                            p Tipo: #{p.Pokemon.type}
+                            p HP: #{p.current_hp}
+                            p ATK: #{p.current_attack}
+                            p VEL: #{p.current_speed}
+
+            button.btn-battle(type="submit") ¡Entrar en combate!

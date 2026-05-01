@@ -1,0 +1,30 @@
+extends layout
+
+block variables
+    - var pageClass = 'battle-page'
+
+block title
+    title Resultado - PokéBack
+
+block content
+    .battle-result
+
+        case result.result
+            when 'win'
+                h1 🏆 ¡Victoria!
+            when 'captured'
+                h1 🔴 ¡Capturado!
+                p #{result.enemy} se unió a tu equipo.
+            when 'loss'
+                h1 💀 Derrota
+                p Tu Pokémon ha muerto para siempre.
+            when 'flee'
+                h1 🏃 Escapaste
+
+        .result-log
+            each line in result.log
+                p › #{line}
+
+        .result-actions
+            a.btn-battle(href="/battle") Volver a batallar
+            a.btn-secondary(href="/pokemon") Ver mis Pokémon

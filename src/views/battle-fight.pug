@@ -1,0 +1,37 @@
+extends layout
+
+block variables
+    - var pageClass = 'battle-page'
+
+block title
+    title Combate - PokéBack
+
+block content
+    h1 ⚔️ COMBATE
+
+    .battle-arena
+        .fighter.fighter--player
+            h2 #{battle.userName}
+            p.hp HP: #{battle.userHp}
+            .hp-bar
+                .hp-fill(style=`width: ${Math.max(0, (battle.userHp / 200) * 100)}%`)
+
+        .vs VS
+
+        .fighter.fighter--enemy
+            h2 #{battle.enemyName}
+            p.type Tipo: #{battle.enemyType}
+            p.hp HP: #{battle.enemyHp}
+            .hp-bar
+                .hp-fill.enemy(style=`width: ${Math.max(0, (battle.enemyHp / battle.enemyMaxHp) * 100)}%`)
+
+    if battle.log && battle.log.length > 0
+        .battle-log
+            each line in battle.log
+                p › #{line}
+
+    .battle-actions
+        form(action="/battle/turn" method="POST")
+            button(type="submit" name="action" value="attack").btn-attack ⚔️ Atacar
+            button(type="submit" name="action" value="capture").btn-capture 🔴 Capturar
+            button(type="submit" name="action" value="flee").btn-flee 🏃 Escapar
