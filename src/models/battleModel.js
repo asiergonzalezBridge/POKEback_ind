@@ -13,7 +13,7 @@ const Battle = sequelize.define('Battle', {
   },
   user_pokemon_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   enemy_pokemon_id: {
     type: DataTypes.INTEGER,

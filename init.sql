@@ -89,11 +89,10 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id_order) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id_product)
 );
-
 CREATE TABLE IF NOT EXISTS battles (
     id_battle SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id_user),
-    user_pokemon_id INTEGER NOT NULL REFERENCES user_pokemon(id_user_pokemon),
+    user_pokemon_id INTEGER REFERENCES user_pokemon(id_user_pokemon) ON DELETE SET NULL,
     enemy_pokemon_id INTEGER NOT NULL REFERENCES pokemon(id_pokemon),
     enemy_hp INTEGER NOT NULL,
     enemy_attack INTEGER NOT NULL,
@@ -101,6 +100,7 @@ CREATE TABLE IF NOT EXISTS battles (
     coins_earned INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- ======================
 -- FOREIGN KEYS

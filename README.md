@@ -1,118 +1,97 @@
-# ⚡ POKEback — Backend Grupal
+# ⚡ POKEback — Backend con PvE
 
-Este proyecto consiste en la construcción del backend de una plataforma de temática Pokémon desarrollada con **Node.js + Express + Sequelize + PostgreSQL + POSTMAN**; donde los usuarios podrán:
+Plataforma backend de temática Pokémon desarrollada con **Node.js + Express + Sequelize + PostgreSQL + Mongo + Pug**, donde los usuarios pueden:
 
 - Registrarse e iniciar sesión
-- Gestionar su perfil
-- Comprar y gestionar elementos dentro de una tienda
-- Sirve como plataforma para futuros juegos (PvE o PvP)
-
-La tienda es solo una parte de un sistema más grande, donde la lógica principal gira en torno a la interacción entre usuarios, sus recursos y mecánicas de juego.
+- Gestionar su perfil y colección de Pokémon
+- Comprar productos en la tienda con monedas
+- Gestionar equipos de hasta 6 Pokémon
+- Combatir en batallas PvE por turnos contra Pokémon salvajes
+- Capturar enemigos y añadirlos a su colección
+- Perder Pokémon permanentemente en combate (permadeath)
 
 ---
 
-# 🎯 Objetivo del Proyecto
+## 🎯 Objetivo del Proyecto
 
-El objetivo principal es demostrar dominio de:
+Demostrar dominio de desarrollo backend con Node.js siguiendo el enfoque:
 
-Desarrollo backend con Node.js
-Diseño de APIs REST
-Uso de bases de datos relacionales (PostgreSQL)
-Buenas prácticas (estructura, seguridad, organización)
-
-Siguiendo el enfoque de
-
-"Menos es más, si está bien hecho"
-
+> "Menos es más, si está bien hecho."
 
 ---
 
 ## 🗂️ Estructura del proyecto
 
-El backend seguirá una arquitectura basada en:
-
-- API REST
-- Patrón MVC (Modelo - Vista - Controlador)
-
-Estructura prevista:
-
 ```
-DOCS/
-├── diagramas/
-│   ├── flujo_admin.svg
-│   ├── flujo_normal.svg
-│   ├── tablas.png
-├── POKEback_Memoria.pdf
-├── README.md
-public/
-├── fonts/
-│   ├── pokemon-solid.ttf
-├── styles.css
-├── admin.css
-├── dashboard.css
-├── index.css
-├── login-register.css
-├── pokemon.css
-├── store.css
-├── teams.css
 src/
 ├── config/
-│   ├── db.js                # Conexión Sequelize
-├── controllers/             # Recibe la petición, llama a servicio y devuelve resultado final a vista.
-│   ├── adminController.js
+│   ├── postgres.js          # Conexión Sequelize + PostgreSQL
+│   └── mongo.js             # Conexión MongoDB (logs/eventos)
+├── controllers/
 │   ├── authController.js
+│   ├── battleController.js  # ← PvE
+│   ├── cartController.js
 │   ├── pokemonController.js
 │   ├── productsController.js
 │   ├── teamController.js
 │   ├── userController.js
 │   ├── userPokemonController.js
-│   ├── userStoreController.js
-├── middlewares/             # Componentes Clave
-│   ├── authMiddelware.js    # JWT 
-│   ├── sessionMiddelware.js # Sesión + roles
-├── models/                  # Interactúa con la base de datos y devuelve datos al Servicio.
-│   ├── index.js 
-│   ├── pokemonModel.js      
-│   ├── productsModel.js      
-│   ├── teamModel.js         
-│   ├── teamPokemonModel.js  
-│   ├── userModel.js         
+│   └── userStoreController.js
+├── middlewares/
+│   ├── authMiddleware.js    # JWT
+│   └── sessionMiddleware.js # Sesión + roles
+├── models/
+│   ├── index.js             # Asociaciones Sequelize
+│   ├── battleModel.js       # ← PvE
+│   ├── orderModel.js
+│   ├── orderItemModel.js
+│   ├── pokemonModel.js
+│   ├── productsModel.js
+│   ├── teamModel.js
+│   ├── teamPokemonModel.js
+│   ├── userModel.js
 │   ├── userPokemonModel.js
-│   ├── userStoreModel.js 
-├── routes/                  # Definición de rutas (API + vistas)
-│   ├── adminRoutes.js
+│   └── userStoreModel.js
+├── routes/
+│   ├── index.js             # Router raíz
 │   ├── authRoutes.js
-│   ├── index.js
+│   ├── battleRoutes.js      # ← PvE (montado en viewRoutes)
+│   ├── cartRoutes.js
+│   ├── orderRoutes.js
 │   ├── pokemonRoutes.js
-│   ├── productsRoutes.js
+│   ├── productsRoute.js
 │   ├── teamRoutes.js
 │   ├── userPokemonRoutes.js
 │   ├── userRoutes.js
 │   ├── userStoreRoutes.js
-│   ├── viewRoutes.js
-├── services/                # Lógica de negocio
-│   ├── adminService.js
+│   └── viewRoutes.js        # Vistas SSR (incluye rutas de batalla)
+├── services/
 │   ├── authService.js
+│   ├── battleService.js     # ← PvE: lógica de combate
+│   ├── cartService.js
 │   ├── pokemonService.js
 │   ├── productService.js
 │   ├── teamService.js
 │   ├── userPokemonService.js
 │   ├── userService.js
 │   ├── userStoreService.js
-└── views/                   # Plantillas
-│   ├── admin.pug
-│   ├── dashboard.pug
-│   ├── error.pug
-│   ├── index.pug
-│   ├── layout.pug
-│   ├── login.pug
-│   ├── pokemon.pug
-│   ├── register.pug
-│   ├── store.pug
-│   ├── teams.pug
-├── index.js 
-
+│   └── orderService.js
+└── views/
+    ├── layout.pug
+    ├── login.pug
+    ├── register.pug
+    ├── dashboard.pug
+    ├── pokemon.pug
+    ├── store.pug
+    ├── cart.pug
+    ├── teams.pug
+    ├── battle-select.pug    # ← PvE
+    ├── battle-fight.pug     # ← PvE
+    ├── battle-result.pug    # ← PvE
+    ├── admin.pug
+    └── error.pug
 ```
+
 ---
 
 ## 🔗 Relaciones entre modelos
@@ -120,13 +99,52 @@ src/
 | Relación | Tipo |
 |----------|------|
 | User → UserPokemon | One-to-Many |
-| UserPokemon → User | Many-to-One |
-| User → Team | One-to-Many |
-| Team → User | Many-to-One |
-| Team → TeamPokemon | One-to-Many |
-| TeamPokemon → Team | Many-to-One |
-| TeamPokemon → UserPokemon | Many-to-One |
 | UserPokemon → Pokemon | Many-to-One |
+| User → Team | One-to-Many |
+| Team → TeamPokemon | One-to-Many |
+| TeamPokemon → UserPokemon | Many-to-One |
+| User → Order | One-to-Many |
+| Order → OrderItem | One-to-Many |
+| OrderItem → Product | Many-to-One |
+| User → UserStore (carrito) | Many-to-Many a través de UserStore |
+| Battle → User | Many-to-One |
+| Battle → UserPokemon | Many-to-One (ON DELETE SET NULL) |
+| Battle → Pokemon (enemigo) | Many-to-One |
+
+---
+
+## ⚔️ Sistema PvE — Combate por Turnos
+
+### Flujo de batalla
+```
+GET /battle         → Selección de Pokémon del usuario
+POST /battle/start  → Inicia combate, genera enemigo aleatorio
+GET /battle/fight   → Vista del turno actual
+POST /battle/turn   → Procesa acción elegida
+GET /battle/result  → Resultado final
+```
+
+### Acciones por turno
+| Acción | Efecto |
+|--------|--------|
+| ⚔️ Atacar | Dañas al enemigo, él contraataca |
+| 🔴 Capturar | % éxito según HP del enemigo. Si falla, el enemigo contraataca |
+| 🏃 Escapar | Fin de la batalla sin recompensa |
+
+### Mecánica de captura
+| Estado del enemigo | Probabilidad |
+|-------------------|-------------|
+| HP > 30% | 20% |
+| HP ≤ 30% | 60% |
+
+### Consecuencias
+- **Victoria**: +20 monedas
+- **Captura exitosa**: Pokémon añadido a `user_pokemon` con HP regenerado + +20 monedas
+- **Derrota**: Tu Pokémon muere permanentemente (DELETE en `user_pokemon`)
+
+### Escalado del enemigo por tipo
+- **Tipos agresivos** (fire, electric): más ataque, menos HP
+- **Tipos defensivos** (resto): menos ataque, más HP
 
 ---
 
@@ -140,92 +158,79 @@ npm install
 
 # 2. Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tus datos de PostgreSQL
+# Editar .env:
+# DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+# JWT_SECRET, SESSION_SECRET
+# PGADMIN_DEFAULT_EMAIL, PGADMIN_DEFAULT_PASSWORD
 
-# 3. Crear la base de datos en PostgreSQL
-create pokeback_db
+# 3. Arrancar con Docker
+docker compose up
 
-# 4. Arrancar el servidor (sincroniza tablas automáticamente)
-npm run dev
-
+# El init.sql inicializa automáticamente las tablas y datos de ejemplo
 ```
+
 ---
 
 ## 🛣️ Rutas disponibles
 
 ### Vistas (navegador)
+
 | Ruta | Descripción | Auth |
 |------|-------------|------|
-| `GET /` | Home | Pública |
-| `POST /auth/login` | Login | Pública |
-| `POST /auth/register` | Registro | Pública |
-| `GET /pokemon` | Pokédex | Pública |
-| `GET /pokemon/:id` | Detalle Pokémon | Pública |
-| `GET /products` | Tienda | Pública |
-| `GET /products/:id` | Buscar productos | Pública |
-| `GET /users/perfil` | Mi perfil | Sesión |
-| `GET /:user_id` | Pokemons de un usuario | Sesión |
-| `GET /users/admin` | Gestión usuarios | Admin |
+| `GET /login` | Login | Pública |
+| `GET /register` | Registro | Pública |
+| `GET /dashboard` | Panel del usuario | Sesión |
+| `GET /store` | Tienda con filtros y paginación | Sesión |
+| `GET /cart` | Carrito de compra | Sesión |
+| `GET /pokemon` | Mis Pokémon (ordenable) | Sesión |
+| `GET /teams` | Mis Equipos | Sesión |
+| `GET /battle` | Selección Pokémon PvE | Sesión |
+| `GET /battle/fight` | Combate activo | Sesión |
+| `GET /battle/result` | Resultado de la batalla | Sesión |
+| `GET /admin` | Panel de administración | Admin |
 
 ### API REST
 
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
-| POST | `/api/auth/register` | Registro | Pública |
-| POST | `/api/auth/login` | Login → JWT | Pública |
-| GET | `/api/pokemon` | Listar pokémon | Pública |
-| GET | `/api/pokemon/:id` | Detalle | Pública |
-| POST | `/api/pokemon` | Crear | Admin JWT |
-| PATCH | `/api/pokemon/:id` | Editar | Admin JWT |
-| DELETE | `/api/pokemon/:id` | Eliminar | Admin JWT |
-| GET | `/api/pokemon/mis-pokemons` | Mi equipo | JWT |
+| POST | `/auth/register` | Registro | Pública |
+| POST | `/auth/login` | Login → JWT | Pública |
+| GET | `/api/pokemon` | Listar Pokémon | Pública |
+| POST | `/api/pokemon` | Crear Pokémon | Admin JWT |
 | GET | `/api/products` | Listar productos | Pública |
-| POST | `/api/products` | Crear | Admin JWT |
-| PATCH | `/api/products/:id` | Editar | Admin JWT |
-| DELETE | `/api/products/:id` | Eliminar | Admin JWT |
+| POST | `/api/products` | Crear producto | Admin JWT |
+| GET | `/api/cart` | Ver carrito | JWT |
+| POST | `/api/cart/add` | Añadir al carrito | JWT |
+| POST | `/api/cart/remove/:id` | Eliminar del carrito | JWT |
+| POST | `/api/cart/checkout` | Finalizar compra | JWT |
 | GET | `/api/users` | Listar usuarios | Admin JWT |
-| PATCH | `/api/users/:id` | Editar usuario | JWT |
-| DELETE | `/api/users/:id` | Eliminar usuario | Admin JWT |
 
 ---
 
 ## 🔐 Credenciales de prueba
 
-| Email | Contraseña | Rol |
-|-------|-----------|-----|
-| luis@mail.com | 1234 | user |
+| Username | Contraseña | Rol |
+|----------|-----------|-----|
+| ash | 1234 | user |
+| misty | 1234 | user |
+| Luis | 4321 | admin |
 
 ---
 
 ## 🧩 Reparto de tareas
 
-
 | Módulo | Responsable |
 |--------|------------|
-| User + Auth + Relaciones | Asier |
-| Pokemon + Documentación| Darío |
-| Product + Vistas | Luís |
-| Team + Team Pokemon | Eli |
+| User + Auth + Relaciones + PvE | Asier |
+| Pokemon + Documentación | Darío |
+| Product + Vistas + Carrito | Luis |
+| Team + TeamPokemon + Diagramas | Eli |
 
 ---
 
 ## Autores
 
-- Asier Gonzales
+- Asier Gonzalez
 - Luis Alonso
 - Eli Fernández
 - Darío Arenaza
-
----
-
-![Tablas](/diagramas/tablas.png)
-
----
-
-![Flujo normal](/diagramas/flujo_normal.svg)
-
----
-
-![Flujo admin](/diagramas/flujo_admin.svg)
-
----

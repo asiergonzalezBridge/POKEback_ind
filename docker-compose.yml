@@ -28,5 +28,14 @@ services:
     networks:
       - pokeback_net
 
+  mongo:   # 👈 AQUÍ, dentro de services
+    image: mongo:7
+    container_name: pokeback_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - pokeback_net
+
 networks:
   pokeback_net:
