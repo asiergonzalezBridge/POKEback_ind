@@ -3,35 +3,56 @@ extends layout
 block variables
     - var pageClass = 'battle-page'
 
+block links
+    link(rel="stylesheet" href="/battle.css")
+
 block title
     title Combate - PokéBack
 
 block content
-    h1 ⚔️ COMBATE
+    - var userHpPct = Math.max(0, Math.round((battle.userHp / battle.userMaxHp) * 100))
+    - var enemyHpPct = Math.max(0, Math.round((battle.enemyHp / battle.enemyMaxHp) * 100))
+    - var userHpClass = userHpPct > 50 ? '' : userHpPct > 20 ? 'medium' : 'low'
+    - var enemyHpClass = enemyHpPct > 50 ? '' : enemyHpPct > 20 ? 'medium' : 'low'
+    - var enemyType = battle.enemyType.toLowerCase()
 
-    .battle-arena
-        .fighter.fighter--player
-            h2 #{battle.userName}
-            p.hp HP: #{battle.userHp}
-            .hp-bar
-                .hp-fill(style=`width: ${Math.max(0, (battle.userHp / 200) * 100)}%`)
+    - var playerBackSprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${battle.userPokemonBaseId}.png`
+    - var enemyFrontSprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${battle.enemyId}.png`
 
-        .vs VS
+    .battle-arena-wrapper
+        .battle-arena
+            //- JUGADOR (izquierda, sprite de espalda)
+            .fighter-platform.player
+                .fighter-hud
+                    .fighter-name #{battle.userName}
+                    .fighter-hp-label HP: #{battle.userHp}
+                    .hp-bar-track
+                        .hp-bar-fill(class=userHpClass style=`width:${userHpPct}%`)
+                img.fighter-sprite.player-sprite(
+                    src=playerBackSprite
+                    alt=battle.userName
+                    onerror=`this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/0.png'`
+                )
 
-        .fighter.fighter--enemy
-            h2 #{battle.enemyName}
-            p.type Tipo: #{battle.enemyType}
-            p.hp HP: #{battle.enemyHp}
-            .hp-bar
-                .hp-fill.enemy(style=`width: ${Math.max(0, (battle.enemyHp / battle.enemyMaxHp) * 100)}%`)
+            .vs-badge VS
 
-    if battle.log && battle.log.length > 0
-        .battle-log
-            each line in battle.log
-                p › #{line}
+            //- ENEMIGO (derecha, sprite frontal)
+            .fighter-platform.enemy
+                .fighter-hud
+                    .fighter-name #{battle.enemyName}
+                    .fighter-hp-label HP: #{battle.enemyHp}
+                    .hp-bar-track
+                        .hp-bar-fill(class=enemyHpClass style=`width:${enemyHpPct}%`)
+                    span.enemy-type-badge(class=enemyType) #{battle.enemyType}
+                img.fighter-sprite.enemy-sprite(src=enemyFrontSprite alt=battle.enemyName)
 
-    .battle-actions
-        form(action="/battle/turn" method="POST")
-            button(type="submit" name="action" value="attack").btn-attack ⚔️ Atacar
-            button(type="submit" name="action" value="capture").btn-capture 🔴 Capturar
-            button(type="submit" name="action" value="flee").btn-flee 🏃 Escapar
+        if battle.log && battle.log.length > 0
+            .battle-log
+                each line in battle.log
+                    p › #{line}
+
+        .battle-actions
+            form(action="/battle/turn" method="POST")
+                button.btn-action.btn-attack(type="submit" name="action" value="attack") ⚔️ Atacar
+                button.btn-action.btn-capture(type="submit" name="action" value="capture") 🔴 Capturar
+                button.btn-action.btn-flee(type="submit" name="action" value="flee") 🏃 Escapar

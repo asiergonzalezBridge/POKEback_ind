@@ -1,0 +1,539 @@
+/* ======================
+   BATTLE — Variables
+====================== */
+:root {
+  --battle-bg: #1a1a2e;
+  --battle-surface: #16213e;
+  --battle-card: #0f3460;
+  --battle-accent: #e94560;
+  --battle-gold: #ffd700;
+  --battle-text: #eaeaea;
+  --battle-muted: #8892a4;
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ======================
+   BATTLE PAGES — Base
+====================== */
+.battle-page {
+  background: var(--battle-bg);
+  min-height: 100vh;
+  color: var(--battle-text);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.battle-page h1 {
+  text-align: center;
+  font-size: 2rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--battle-gold);
+  text-shadow: 0 0 20px rgba(255,215,0,0.4);
+  margin: 2rem 0 1.5rem;
+}
+
+/* ======================
+   BATTLE SELECT — Cartas
+====================== */
+.pokemon-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  padding: 0 1.5rem;
+}
+
+.pokemon-select-grid label {
+  cursor: pointer;
+}
+
+.pokemon-select-grid input[type="radio"] {
+  display: none;
+}
+
+.pokemon-select-grid input[type="radio"]:checked + .card-inner {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 0 0 3px var(--battle-gold), 0 16px 40px rgba(255,215,0,0.3);
+}
+
+.card-inner {
+  border-radius: var(--radius);
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.card-inner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+}
+
+/* Sprite en la carta */
+.card-inner .card-sprite {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  margin-bottom: 0.5rem;
+}
+
+.card-inner h3 {
+  font-size: 1rem;
+  text-transform: capitalize;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  margin: 0 0 0.3rem;
+}
+
+.card-inner .card-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 20px;
+  padding: 2px 10px;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.card-inner .card-stats {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card-inner .stat-chip {
+  font-size: 0.68rem;
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  padding: 2px 8px;
+  color: rgba(255,255,255,0.85);
+}
+
+/* Colores por tipo — cartas */
+.card-inner.normal   { background: linear-gradient(145deg, #999, #555); }
+.card-inner.fire     { background: linear-gradient(145deg, #ff4d4d, #cc0000); }
+.card-inner.water    { background: linear-gradient(145deg, #4da6ff, #0059b3); }
+.card-inner.grass    { background: linear-gradient(145deg, #66cc66, #2d862d); }
+.card-inner.electric { background: linear-gradient(145deg, #ffdb4d, #e6b800); }
+.card-inner.ice      { background: linear-gradient(145deg, #b3ecff, #66d9ff); }
+.card-inner.fighting { background: linear-gradient(145deg, #cc3300, #802000); }
+.card-inner.poison   { background: linear-gradient(145deg, #9933cc, #660099); }
+.card-inner.ground   { background: linear-gradient(145deg, #cc9966, #996633); }
+.card-inner.flying   { background: linear-gradient(145deg, #9999ff, #6666cc); }
+.card-inner.psychic  { background: linear-gradient(145deg, #ff66b3, #cc0066); }
+.card-inner.bug      { background: linear-gradient(145deg, #99cc00, #669900); }
+.card-inner.rock     { background: linear-gradient(145deg, #bfbfbf, #808080); }
+.card-inner.ghost    { background: linear-gradient(145deg, #666699, #333366); }
+.card-inner.dragon   { background: linear-gradient(145deg, #6633ff, #330099); }
+.card-inner.dark     { background: linear-gradient(145deg, #4d4d4d, #1a1a1a); }
+.card-inner.steel    { background: linear-gradient(145deg, #cccccc, #808080); }
+.card-inner.fairy    { background: linear-gradient(145deg, #ffb3e6, #ff66cc); }
+
+/* Botón iniciar combate */
+.btn-battle {
+  display: block;
+  margin: 0 auto 3rem;
+  padding: 0.9rem 2.5rem;
+  background: var(--battle-accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(233,69,96,0.4);
+  text-decoration: none;
+}
+
+.btn-battle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 28px rgba(233,69,96,0.6);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 0.7rem 1.8rem;
+  background: transparent;
+  color: var(--battle-muted);
+  border: 1px solid var(--battle-muted);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-secondary:hover {
+  color: var(--battle-text);
+  border-color: var(--battle-text);
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--battle-muted);
+  font-size: 1rem;
+  margin-top: 3rem;
+}
+
+/* ======================
+   BATTLE FIGHT — Arena
+====================== */
+.battle-arena-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.battle-arena {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(180deg, #0d1b2a 0%, #1a3a2a 60%, #2d4a1e 100%);
+  border-radius: var(--radius);
+  padding: 2rem 2.5rem 1.5rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+}
+
+/* fondo decorativo */
+.battle-arena::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.3));
+  pointer-events: none;
+}
+
+/* plataformas */
+.fighter-platform {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.fighter-platform.player { align-items: flex-start; }
+.fighter-platform.enemy  { align-items: flex-end; }
+
+/* HUD encima del sprite */
+.fighter-hud {
+  background: rgba(0,0,0,0.7);
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  min-width: 180px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.fighter-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+
+.fighter-hp-label {
+  font-size: 0.7rem;
+  color: var(--battle-muted);
+  margin-bottom: 0.2rem;
+}
+
+.hp-bar-track {
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hp-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  background: #4caf50;
+}
+
+.hp-bar-fill.medium { background: #ff9800; }
+.hp-bar-fill.low    { background: #f44336; }
+
+/* Sprites */
+.fighter-sprite {
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+}
+
+.fighter-sprite.player-sprite {
+  width: 120px;
+  height: 120px;
+  /* espalda: back sprite */
+}
+
+.fighter-sprite.enemy-sprite {
+  width: 130px;
+  height: 130px;
+  animation: enemy-idle 3s ease-in-out infinite;
+}
+
+@keyframes enemy-idle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.vs-badge {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.2);
+  align-self: center;
+  letter-spacing: 1px;
+}
+
+/* Tipo enemigo badge */
+.enemy-type-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 20px;
+  padding: 2px 10px;
+  color: #fff;
+  margin-top: 0.3rem;
+}
+
+/* Log de batalla */
+.battle-log {
+  background: rgba(0,0,0,0.5);
+  border-radius: 12px;
+  padding: 1rem 1.4rem;
+  margin-bottom: 1.5rem;
+  border-left: 3px solid var(--battle-accent);
+  min-height: 56px;
+}
+
+.battle-log p {
+  font-size: 0.85rem;
+  color: var(--battle-text);
+  margin: 0.2rem 0;
+  line-height: 1.5;
+}
+
+.battle-log p:last-child {
+  color: var(--battle-gold);
+  font-weight: 600;
+}
+
+/* Acciones */
+.battle-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.battle-actions form {
+  display: contents;
+}
+
+.btn-action {
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-transform: uppercase;
+}
+
+.btn-attack {
+  background: #e94560;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(233,69,96,0.4);
+}
+
+.btn-capture {
+  background: #e63946;
+  background: linear-gradient(135deg, #cc0000, #ff4444);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(230,57,70,0.4);
+}
+
+.btn-flee {
+  background: transparent;
+  color: var(--battle-muted);
+  border: 1px solid var(--battle-muted);
+}
+
+.btn-action:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+/* ======================
+   BATTLE RESULT
+====================== */
+.battle-result {
+  max-width: 500px;
+  margin: 3rem auto;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.result-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: result-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes result-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.result-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.result-title.win      { color: var(--battle-gold); text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+.result-title.captured { color: #e74c3c; text-shadow: 0 0 20px rgba(231,76,60,0.5); }
+.result-title.loss     { color: #636e72; }
+.result-title.flee     { color: var(--battle-muted); }
+
+.result-subtitle {
+  color: var(--battle-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.result-log {
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px;
+  padding: 1rem 1.4rem;
+  text-align: left;
+  margin-bottom: 2rem;
+  border-left: 3px solid rgba(255,255,255,0.1);
+}
+
+.result-log p {
+  font-size: 0.82rem;
+  color: var(--battle-muted);
+  margin: 0.2rem 0;
+}
+
+.result-log p:last-child { color: var(--battle-text); }
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ======================
+   INVENTARIO — Cartas
+====================== */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.inventory-card {
+  background: var(--battle-card);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.inventory-card:hover { transform: translateY(-4px); }
+
+.inventory-card img {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+  margin-bottom: 0.5rem;
+}
+
+.inventory-card h3 {
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  color: #fff;
+  margin: 0 0 0.3rem;
+}
+
+.inventory-card .item-type {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--battle-muted);
+  margin-bottom: 0.4rem;
+}
+
+.inventory-card .item-qty {
+  font-size: 0.75rem;
+  color: var(--battle-gold);
+  font-weight: 700;
+}
+
+/* Tipo badge colores (reutiliza enemy-type del CSS adjunto) */
+.enemy-type-badge.fire     { background: #ff4d4d; }
+.enemy-type-badge.water    { background: #4da6ff; }
+.enemy-type-badge.grass    { background: #66cc66; }
+.enemy-type-badge.electric { background: #ffd633; color: #333; }
+.enemy-type-badge.ice      { background: #66ffff; color: #333; }
+.enemy-type-badge.fighting { background: #cc3300; }
+.enemy-type-badge.poison   { background: #cc66ff; }
+.enemy-type-badge.ground   { background: #cc9966; }
+.enemy-type-badge.flying   { background: #99ccff; color: #333; }
+.enemy-type-badge.psychic  { background: #ff66b3; }
+.enemy-type-badge.bug      { background: #99cc00; color: #333; }
+.enemy-type-badge.rock     { background: #bfbfbf; color: #333; }
+.enemy-type-badge.ghost    { background: #666699; }
+.enemy-type-badge.dragon   { background: #6633ff; }
+.enemy-type-badge.dark     { background: #4d4d4d; }
+.enemy-type-badge.steel    { background: #cccccc; color: #333; }
+.enemy-type-badge.fairy    { background: #ffb3e6; color: #333; }
+.enemy-type-badge.normal   { background: #999; }

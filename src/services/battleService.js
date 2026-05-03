@@ -5,22 +5,24 @@ import Battle from '../models/battleModel.js'
 import { Op } from 'sequelize'
 
 const COINS_WIN = 20
-const CAPTURE_HP_HIGH = 0.20
-const CAPTURE_HP_LOW  = 0.60
+const CAPTURE_HP_HIGH = 0.30  // 30% capturando con HP alto
+const CAPTURE_HP_LOW  = 0.65  // 65% capturando con HP bajo
+
+const umbral = 0.50  // intentar capturar cuando enemigo < 50% HP
 
 function scaleEnemyStats(pokemon) {
-  const aggressive = ['fire', 'electric']
+  const aggressive = ['fire', 'electric', 'fighting', 'dragon']
   const isAggressive = aggressive.includes(pokemon.type)
-  const baseHp  = 80
-  const baseAtk = 40
-  const baseSpd = 40
+
+  const baseHp  = 110  // jugador necesita ~3 ataques para llegar al umbral
+  const baseAtk = 28   // jugador aguanta ~3-4 golpes con 90-100 HP
+
   return {
-    hp:     isAggressive ? Math.floor(baseHp  * 0.9) : Math.floor(baseHp  * 1.3),
-    attack: isAggressive ? Math.floor(baseAtk * 1.5) : Math.floor(baseAtk * 0.8),
-    speed:  Math.floor(baseSpd + Math.random() * 20)
+    hp:     isAggressive ? Math.floor(baseHp * 0.85) : Math.floor(baseHp * 1.15),
+    attack: isAggressive ? Math.floor(baseAtk * 1.4) : Math.floor(baseAtk * 0.85),
+    speed:  Math.floor(30 + Math.random() * 20)
   }
 }
-
 export async function startBattle(userId, userPokemonId) {
   console.log(`[startBattle] userId=${userId} userPokemonId=${userPokemonId}`)
   try {
@@ -56,6 +58,8 @@ export async function startBattle(userId, userPokemonId) {
     return {
       userId,
       userPokemonId,
+      userPokemonBaseId: userPokemon.pokemon_id_pokemon,
+      userMaxHp:  userPokemon.current_hp,
       userHp:      userPokemon.current_hp,
       userAttack:  userPokemon.current_attack,
       userName:    userPokemon.Pokemon.name,
@@ -103,7 +107,7 @@ export async function processTurn(battle, action) {
 
     if (action === 'capture') {
       const hpRatio = battle.enemyHp / battle.enemyMaxHp
-      const chance  = hpRatio <= 0.3 ? CAPTURE_HP_LOW : CAPTURE_HP_HIGH
+      const chance  = hpRatio <= 0.5 ? CAPTURE_HP_LOW : CAPTURE_HP_HIGH
       const roll    = Math.random()
       const success = roll < chance
       console.log(`[processTurn] captura → hpRatio=${hpRatio.toFixed(2)} chance=${chance} roll=${roll.toFixed(2)} success=${success}`)

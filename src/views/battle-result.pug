@@ -3,23 +3,31 @@ extends layout
 block variables
     - var pageClass = 'battle-page'
 
+block links
+    link(rel="stylesheet" href="/battle.css")
+
 block title
     title Resultado - PokéBack
 
 block content
     .battle-result
-
         case result.result
             when 'win'
-                h1 🏆 ¡Victoria!
+                span.result-icon 🏆
+                h2.result-title.win ¡Victoria!
+                p.result-subtitle +20 monedas añadidas a tu cuenta
             when 'captured'
-                h1 🔴 ¡Capturado!
-                p #{result.enemy} se unió a tu equipo.
+                span.result-icon 🔴
+                h2.result-title.captured ¡Capturado!
+                p.result-subtitle #{result.enemy} se unió a tu colección
             when 'loss'
-                h1 💀 Derrota
-                p Tu Pokémon ha muerto para siempre.
+                span.result-icon 💀
+                h2.result-title.loss Derrota
+                p.result-subtitle Tu Pokémon ha muerto para siempre
             when 'flee'
-                h1 🏃 Escapaste
+                span.result-icon 🏃
+                h2.result-title.flee Escapaste
+                p.result-subtitle Sin recompensa
 
         .result-log
             each line in result.log

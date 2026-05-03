@@ -3,10 +3,15 @@ dotenv.config()
 
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { User } from '../models/index.js'
+import { User, UserPokemon, Pokemon } from '../models/index.js'
+import { Op } from 'sequelize'
 
-// Registra un nuevo usuario en la base de datos.
-// Valida los campos, comprueba si el email ya existe y hashea la contraseña.
+// Stats base para el Pokémon inicial
+const STARTER_HP     = 100
+const STARTER_ATTACK = 50
+const STARTER_SPEED  = 45
+
+// Registra un nuevo usuario y le asigna un Pokémon inicial según su poketype.
 export const register = async ({ username, email, password, poketype }) => {
 
   if (!username || !email || !password || !poketype) {
@@ -16,7 +21,6 @@ export const register = async ({ username, email, password, poketype }) => {
   }
 
   const existe = await User.findOne({ where: { email } })
-
   if (existe) {
     const error = new Error('Email ya registrado')
     error.statusCode = 409
@@ -32,13 +36,44 @@ export const register = async ({ username, email, password, poketype }) => {
     poketype
   })
 
-  const { password: _, ...userSafe } = user.toJSON()
+  // Buscar un Pokémon del catálogo que coincida con el tipo elegido
+  const typeNormalized = poketype.toLowerCase()
 
+  const matchingPokemons = await Pokemon.findAll({
+    where: { type: typeNormalized }
+  })
+
+  let starterPokemon = null
+
+  if (matchingPokemons.length > 0) {
+    // Elegir uno aleatorio del tipo
+    starterPokemon = matchingPokemons[Math.floor(Math.random() * matchingPokemons.length)]
+  } else {
+    // Fallback: Pokémon aleatorio de cualquier tipo
+    const count = await Pokemon.count()
+    starterPokemon = await Pokemon.findOne({
+      offset: Math.floor(Math.random() * count)
+    })
+  }
+
+  if (starterPokemon) {
+    await UserPokemon.create({
+      user_id_user:       user.id_user,
+      pokemon_id_pokemon: starterPokemon.id_pokemon,
+      current_hp:         STARTER_HP,
+      current_attack:     STARTER_ATTACK,
+      current_speed:      STARTER_SPEED
+    })
+    console.log(`[register] Starter asignado: ${starterPokemon.name} (${starterPokemon.type}) → user ${user.id_user}`)
+  } else {
+    console.warn(`[register] No se encontró Pokémon de tipo ${typeNormalized} ni fallback`)
+  }
+
+  const { password: _, ...userSafe } = user.toJSON()
   return userSafe
 }
 
-// Verifica las credenciales de un usuario. Soporta contraseñas hasheadas (bcrypt)
-// y contraseñas en texto plano (usuarios de init.sql).
+// Verifica las credenciales. Soporta bcrypt y texto plano (usuarios init.sql).
 export const loginUser = async (email, password) => {
 
   const user = await User.findOne({ where: { email } })
@@ -54,7 +89,6 @@ export const loginUser = async (email, password) => {
   if (user.password.startsWith('$2b$')) {
     validPassword = await bcrypt.compare(password, user.password)
   } else {
-    // Fallback para usuarios del init.sql (sin hash)
     validPassword = password === user.password
   }
 
@@ -67,7 +101,7 @@ export const loginUser = async (email, password) => {
   return user
 }
 
-// Genera un token JWT para el usuario tras validar sus credenciales.
+// Genera JWT tras validar credenciales.
 export const login = async ({ email, password }) => {
 
   if (!email || !password) {
@@ -79,11 +113,7 @@ export const login = async ({ email, password }) => {
   const user = await loginUser(email, password)
 
   const token = jwt.sign(
-    {
-      id: user.id_user,
-      email: user.email,
-      rol: user.rol
-    },
+    { id: user.id_user, email: user.email, rol: user.rol },
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   )

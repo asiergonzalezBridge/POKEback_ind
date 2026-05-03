@@ -3,28 +3,37 @@ extends layout
 block variables
     - var pageClass = 'battle-page'
 
+block links
+    link(rel="stylesheet" href="/battle.css")
+
 block title
-    title Batalla - PokéBack
+    title Elegir Pokémon - PokéBack
 
 block content
-    h1 ⚔️ ELEGIR POKÉMON
+    h1 ⚔️ Elegir Pokémon
 
     if pokemons.length === 0
-        p.empty No tienes Pokémon disponibles para batallar.
-        a(href="/store") Ir a la tienda
+        p.empty-msg No tienes Pokémon disponibles para batallar.
+        a.btn-secondary(href="/store") Ir a la tienda
+
     else
-        p Elige con quién entrar al combate. Si pierde, lo perderás para siempre.
+        p(style="text-align:center;color:#8892a4;margin-bottom:1.5rem;")
+            | Elige con quién entrar. Si pierde, lo perderás para siempre.
 
         form(action="/battle/start" method="POST")
             .pokemon-select-grid
-                each p in pokemons
+                each pk in pokemons
+                    - var type = pk.Pokemon.type.toLowerCase()
+                    - var spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pk.pokemon_id_pokemon}.png`
                     label.pokemon-card
-                        input(type="radio" name="userPokemonId" value=p.id_user_pokemon required)
-                        .card-inner
-                            h3 #{p.Pokemon.name}
-                            p Tipo: #{p.Pokemon.type}
-                            p HP: #{p.current_hp}
-                            p ATK: #{p.current_attack}
-                            p VEL: #{p.current_speed}
+                        input(type="radio" name="userPokemonId" value=pk.id_user_pokemon required)
+                        .card-inner(class=type)
+                            img.card-sprite(src=spriteUrl alt=pk.Pokemon.name)
+                            h3 #{pk.Pokemon.name}
+                            span.card-type #{type}
+                            .card-stats
+                                span.stat-chip ❤️ #{pk.current_hp}
+                                span.stat-chip ⚔️ #{pk.current_attack}
+                                span.stat-chip ⚡ #{pk.current_speed}
 
             button.btn-battle(type="submit") ¡Entrar en combate!
