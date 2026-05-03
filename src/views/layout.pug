@@ -41,14 +41,15 @@ html(lang="es")
                         a(href="/pokemon") Mis Pokémon
                     li.nav-teams
                         a(href="/teams") Mis Equipos
+                    li.nav-battle
+                        a(href="/battle") ⚔️ Batalla
                     li.nav-user.hello-user
                         if user && user.username
                             a(href="/dashboard") Hola, #{user.username}
                             a(href="/logout") Cerrar sesión
                         else
                             a(href="/login") Login
-                    li.nav-battle
-                        a(href="/battle") ⚔️ Batalla
+                    
 
         main
             block content
