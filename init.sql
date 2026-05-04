@@ -327,7 +327,13 @@ INSERT INTO user_pokemon (user_id_user, pokemon_id_pokemon, current_hp, current_
 (3, 25, 100, 55, 90), -- id 6 Brock - Pikachu
 (3,  4,  90, 60, 65), -- id 7 Brock - Charmander
 (3,  7,  95, 50, 43), -- id 8 Brock - Squirtle
-(3,  1, 100, 49, 45); -- id 9 Brock - Bulbasaur
+(3,  1, 100, 49, 45), -- id 9 Brock - Bulbasaur
+(4, 144, 100, 90, 85),  -- Articuno
+(4, 145, 100, 95, 100), -- Zapdos
+(4, 146, 100, 100, 90), -- Moltres
+(4, 150, 120, 120, 110),-- Mewtwo
+(4, 151, 100, 100, 100),-- Mew
+(4, 25, 100, 55, 90); -- id 1 Ash - Pikachu
 
 -- ======================
 -- TEAM

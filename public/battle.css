@@ -391,8 +391,8 @@
 }
 
 .btn-flee {
-  background: transparent;
-  color: var(--battle-muted);
+  background:grey;
+  color: #fff;
   border: 1px solid var(--battle-muted);
 }
 
